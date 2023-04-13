@@ -18,7 +18,7 @@ public class SpeedController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Speed(SpeedModel model)
+    public async Task<IActionResult> Speed([FromBody] SpeedModel model)
     {
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(HttpContext.RequestAborted);
         var (path, contentType) = await _speedService.SpeedAsync(model, cts.Token);
