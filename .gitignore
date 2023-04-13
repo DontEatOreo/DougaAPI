@@ -1,0 +1,6 @@
+/DougaAPI/bin
+/DougaAPI/obj
+/.idea
+/.vscode
+
+.DS_Store
