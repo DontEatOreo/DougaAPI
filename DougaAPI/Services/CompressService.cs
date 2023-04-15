@@ -53,10 +53,6 @@ public class CompressService
         var contentType = _provider.TryGetContentType(compressedFilePath, out var type)
             ? type
             : "application/octet-stream";
-        var size = new FileInfo(compressedFilePath).Length / 1024 / 1024;
-
-        if (size > model.MaxFileSize)
-            return await _global.UploadToServer(path, token).ConfigureAwait(false);
 
         return (compressedFilePath, contentType);
     }

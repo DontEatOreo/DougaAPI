@@ -21,7 +21,6 @@ builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddScoped<MediaService>();
 builder.Services.AddScoped<CompressService>();
 builder.Services.AddScoped<SpeedService>();
-builder.Services.AddScoped<TrimService>();
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
@@ -34,14 +33,6 @@ app.Run();
 
 public class AppSettings
 {
-    public AppSettings(string fFmpegPath, string ytdlPath, string formatSort, string uploadApiLink)
-    {
-        FFmpegPath = fFmpegPath;
-        YtdlPath = ytdlPath;
-        FormatSort = formatSort;
-        UploadApiLink = uploadApiLink;
-    }
-
     public string FFmpegPath { get; set; }
     public string YtdlPath { get; set; }
     public string FormatSort { get; set; }
