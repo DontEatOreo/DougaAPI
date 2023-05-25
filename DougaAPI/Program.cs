@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using DougaAPI;
+using DougaAPI.Clients;
 using DougaAPI.Exceptions;
 using DougaAPI.Services;
 using Microsoft.AspNetCore.Http.Features;
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddJsonOptions(o => o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<ServerClient>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.Configure<FormOptions>(options => options.MultipartBodyLengthLimit = long.MaxValue);
 
@@ -30,11 +31,3 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
-
-public class AppSettings
-{
-    public string FFmpegPath { get; set; }
-    public string YtdlPath { get; set; }
-    public string FormatSort { get; set; }
-    public string UploadApiLink { get; set; }
-}
