@@ -4,14 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace DougaAPI.Exceptions;
 
-public class CustomExceptionMiddleware
+public sealed class CustomExceptionMiddleware
 {
     private readonly RequestDelegate _next;
 
     public CustomExceptionMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
+        => _next = next;
 
     public async Task InvokeAsync(HttpContext httpContext)
     {
@@ -45,7 +43,7 @@ public class CustomExceptionMiddleware
     }
 }
 
-public class ErrorDetails
+public sealed class ErrorDetails
 {
     [JsonPropertyName("status")]
     public int StatusCode { get; set; }

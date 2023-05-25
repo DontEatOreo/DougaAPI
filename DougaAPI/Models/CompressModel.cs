@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DougaAPI.Models;
 
-public class CompressModel : ModelBase
+public sealed class CompressModel : ModelBase
 {
     [JsonPropertyName("ios_compatible")]
     [Required]

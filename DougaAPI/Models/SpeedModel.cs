@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DougaAPI.Models;
 
-public class SpeedModel : ModelBase
+public sealed class SpeedModel : ModelBase
 {
     [JsonPropertyName("speed")]
     [Required]

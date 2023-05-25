@@ -1,3 +1,4 @@
+using DougaAPI.Clients;
 using DougaAPI.Models;
 using DougaAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -8,12 +9,12 @@ namespace DougaAPI.Controllers;
 [Route("[controller]")]
 public class SpeedController : ControllerBase
 {
-    private readonly Global _global;
+    private readonly ServerClient _serverClient;
     private readonly SpeedService _speedService;
 
-    public SpeedController(Global global, SpeedService speedService)
+    public SpeedController(ServerClient serverClient, SpeedService speedService)
     {
-        _global = global;
+        _serverClient = serverClient;
         _speedService = speedService;
     }
 
@@ -27,7 +28,7 @@ public class SpeedController : ControllerBase
         if (size <= model.MaxFileSize)
             return PhysicalFile(path, contentType, Path.GetFileName(path));
 
-        var (filepath, _) = await _global.UploadToServer(path, cts.Token).ConfigureAwait(false);
-        return Ok(filepath);
+        var uri = await _serverClient.UploadToServer(path, cts.Token);
+        return Ok(uri);
     }
 }

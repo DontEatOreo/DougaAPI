@@ -9,13 +9,11 @@ namespace DougaAPI.Services;
 [UsedImplicitly]
 public class SpeedService
 {
-    private readonly Global _global;
     private readonly MediaService _mediaService;
     private readonly FileExtensionContentTypeProvider _provider;
 
-    public SpeedService(Global global, FileExtensionContentTypeProvider provider, MediaService mediaService)
+    public SpeedService(FileExtensionContentTypeProvider provider, MediaService mediaService)
     {
-        _global = global;
         _provider = provider;
         _mediaService = mediaService;
     }
@@ -24,10 +22,10 @@ public class SpeedService
     {
         var (path, _) = await _mediaService.DownloadMedia(model, options =>
         {
-            options.Output = Path.Combine(_global.DownloadPath, Guid.NewGuid().ToString()[..4], "%(id)s.%(ext)s");
+            options.Output = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4], "%(id)s.%(ext)s");
         }, token);
 
-        var mediaInfo = await FFmpeg.GetMediaInfo(path, token).ConfigureAwait(false);
+        var mediaInfo = await FFmpeg.GetMediaInfo(path, token);
         var videoStream = mediaInfo.VideoStreams.FirstOrDefault();
         var audioStream = mediaInfo.AudioStreams.FirstOrDefault();
 
@@ -42,7 +40,7 @@ public class SpeedService
         var extension = Path.GetExtension(path);
 
         var folderUuid = Guid.NewGuid().ToString()[..4];
-        var outPath = Path.Combine(_global.DownloadPath, folderUuid, $"{id}{extension}");
+        var outPath = Path.Combine(Path.GetTempPath(), folderUuid, $"{id}{extension}");
 
         var conversion = FFmpeg.Conversions.New()
             .SetOutput(outPath);
@@ -53,7 +51,7 @@ public class SpeedService
         if (audioStream != null)
             conversion.AddStream(audioStream);
 
-        await conversion.Start(token).ConfigureAwait(false);
+        await conversion.Start(token);
 
         var contentType = _provider.TryGetContentType(outPath, out var type) ? type : "application/octet-stream";
 

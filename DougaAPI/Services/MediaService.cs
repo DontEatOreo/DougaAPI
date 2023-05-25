@@ -19,7 +19,7 @@ public class MediaService
     public async Task<(string path, string contentType)> DownloadMedia(ModelBase model,
         Action<OptionSet> configureOptions, CancellationToken token)
     {
-        var fetch = await _global.YoutubeDl.RunVideoDataFetch(model.Url, token).ConfigureAwait(false);
+        var fetch = await _global.YoutubeDl.RunVideoDataFetch(model.Url, token);
         if (fetch.Data is null || fetch.Data.Duration is null or 0 || fetch.Data.IsLive is true)
             throw new CustomInvalidOperationException("Invalid URL");
 
@@ -33,9 +33,8 @@ public class MediaService
         var outPath = Path.GetDirectoryName(optionSet.Output)!;
 
         var download = await _global.YoutubeDl.RunVideoDownload(model.Url,
-                overrideOptions: optionSet,
-                ct: token)
-            .ConfigureAwait(false);
+            overrideOptions: optionSet,
+            ct: token);
         if (!download.Success)
             throw new CustomInvalidOperationException("Video download failed");
 

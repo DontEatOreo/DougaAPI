@@ -1,3 +1,4 @@
+using DougaAPI.Clients;
 using DougaAPI.Exceptions;
 using DougaAPI.Models;
 using Microsoft.AspNetCore.StaticFiles;
@@ -9,12 +10,14 @@ namespace DougaAPI.Services;
 public class CompressService
 {
     private readonly Global _global;
+    private readonly ServerClient _serverClient;
     private readonly FileExtensionContentTypeProvider _provider;
     private readonly MediaService _mediaService;
 
-    public CompressService(Global global, FileExtensionContentTypeProvider provider, MediaService mediaService)
+    public CompressService(Global global, ServerClient serverClient, FileExtensionContentTypeProvider provider, MediaService mediaService)
     {
         _global = global;
+        _serverClient = serverClient;
         _provider = provider;
         _mediaService = mediaService;
     }
@@ -33,16 +36,17 @@ public class CompressService
 
     public async Task<(string path, string contentType)> CompressVideo(CompressModel model, CancellationToken token)
     {
-        var (path, _) = await _mediaService.DownloadMedia(model, VideoDownloadOptions, token)
-            .ConfigureAwait(false);
-        var mediaInfo = await FFmpeg.GetMediaInfo(path, token).ConfigureAwait(false);
+        var (path, _) = await _mediaService.DownloadMedia(model, VideoDownloadOptions, token);
+        var mediaInfo = await FFmpeg.GetMediaInfo(path, token);
 
-        var videoStream = mediaInfo.VideoStreams.First();
-        var audioStream = mediaInfo.AudioStreams.First();
+        var videoStream = mediaInfo.VideoStreams.FirstOrDefault();
+        var audioStream = mediaInfo.AudioStreams.FirstOrDefault();
+
         if (videoStream is null)
             throw new InvalidOperationException("Invalid video data.");
 
-        ConfigureAudioStream(audioStream, model.Bitrate);
+        if (audioStream != null)
+            ConfigureAudioStream(audioStream, model.Bitrate);
         await ConfigureVideoStream(videoStream, model);
 
         var extension = Path.GetExtension(path);
@@ -59,11 +63,10 @@ public class CompressService
 
     public async Task<(string path, string contentType)> CompressAudio(CompressModel model, CancellationToken token)
     {
-        var (path, _) = await _mediaService.DownloadMedia(model, AudioDownloadOptions, token)
-            .ConfigureAwait(false);
-        var mediaInfo = await FFmpeg.GetMediaInfo(path, token).ConfigureAwait(false);
+        var (path, _) = await _mediaService.DownloadMedia(model, AudioDownloadOptions, token);
+        var mediaInfo = await FFmpeg.GetMediaInfo(path, token);
 
-        var audioStream = mediaInfo.AudioStreams.First();
+        var audioStream = mediaInfo.AudioStreams.FirstOrDefault();
         if (audioStream is null)
             throw new CustomInvalidOperationException("Invalid audio data");
 
@@ -75,17 +78,18 @@ public class CompressService
             : "application/octet-stream";
         var size = new FileInfo(compressedFilePath).Length / 1024 / 1024;
 
-        if (size > model.MaxFileSize)
-            return await _global.UploadToServer(path, token).ConfigureAwait(false);
+        if (size <= model.MaxFileSize)
+            return (compressedFilePath, contentType);
 
-        return (compressedFilePath, contentType);
+        var uri = await _serverClient.UploadToServer(compressedFilePath, token);
+        return (uri.ToString(), contentType);
     }
 
     private void VideoDownloadOptions(OptionSet optionSet)
     {
         optionSet.FormatSort = _global.FormatSort;
         optionSet.NoPlaylist = true;
-        optionSet.Output = Path.Combine(_global.DownloadPath, "%(id)s.%(ext)s");
+        optionSet.Output = Path.Combine(Path.GetTempPath(), "%(id)s.%(ext)s");
     }
 
     private void AudioDownloadOptions(OptionSet optionSet)
@@ -94,7 +98,7 @@ public class CompressService
         optionSet.NoPlaylist = true;
         optionSet.AudioFormat = AudioConversionFormat.M4a;
         optionSet.ExtractAudio = true;
-        optionSet.Output = Path.Combine(_global.DownloadPath, "%(id)s.%(ext)s");
+        optionSet.Output = Path.Combine(Path.GetTempPath(), "%(id)s.%(ext)s");
     }
 
     private static void ConfigureAudioStream(IAudioStream audioStream, int? bitrate)
@@ -106,7 +110,7 @@ public class CompressService
     private static async Task ConfigureVideoStream(IVideoStream videoStream, CompressModel model)
     {
         videoStream.SetCodec(model.IosCompatible ? VideoCodec.libx264 : VideoCodec.vp9);
-        if (model.Resolution != null)
+        if (!string.IsNullOrEmpty(model.Resolution) && model.Resolution != "None")
             await SetRes(videoStream, model.Resolution);
     }
 
@@ -120,7 +124,7 @@ public class CompressService
         var id = Path.GetFileNameWithoutExtension(inputPath);
 
         var folderUuid = Guid.NewGuid().ToString()[..4];
-        var compressedFilePath = Path.Combine(_global.DownloadPath, folderUuid, $"{id}{outputExtension}");
+        var compressedFilePath = Path.Combine(Path.GetTempPath(), folderUuid, $"{id}{outputExtension}");
         Directory.CreateDirectory(Path.GetDirectoryName(compressedFilePath)!);
 
         var conversion = FFmpeg.Conversions.New()
@@ -136,7 +140,7 @@ public class CompressService
                 conversion.AddParameter(string.Join(" ", _vp9Args));
         }
 
-        await conversion.Start(token).ConfigureAwait(false);
+        await conversion.Start(token);
 
         if (compressedFilePath is null)
             throw new FileNotFoundException("File not found");

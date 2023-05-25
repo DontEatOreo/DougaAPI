@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DougaAPI.Models;
 
-public class TrimModel : ModelBase
+public sealed class TrimModel : ModelBase
 {
     [JsonPropertyName("start")]
     [Required]

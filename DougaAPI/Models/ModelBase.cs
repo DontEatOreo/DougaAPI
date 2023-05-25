@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DougaAPI.Models;
 
+#pragma warning disable CS8618
 public class ModelBase
 {
     [JsonPropertyName("url")]
@@ -15,3 +16,4 @@ public class ModelBase
     [Range(0, 100)]
     public int MaxFileSize { get; init; }
 }
+#pragma warning restore CS8618
