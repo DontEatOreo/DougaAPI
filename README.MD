@@ -17,8 +17,8 @@ Each JSON structure inherits from ModelBase thus each end point needs to have th
 
 **Endpoints:** 
 ````
-compression/video
-compression/audio
+compress/video
+compress/audio
 ````
 
 **JSON:**
