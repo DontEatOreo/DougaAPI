@@ -23,7 +23,7 @@ builder.Services.AddScoped<MediaService>();
 builder.Services.AddScoped<CompressService>();
 builder.Services.AddScoped<SpeedService>();
 
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("MySettings"));
 
 var app = builder.Build();
 app.UseMiddleware<CustomExceptionMiddleware>();

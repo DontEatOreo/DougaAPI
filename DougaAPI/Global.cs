@@ -11,8 +11,8 @@ public class Global
 
     public Global(IOptions<AppSettings> appSettings)
     {
-        var ffmpegPath = appSettings.Value.FFmpegPath ?? throw new Exception("Empty ffmpeg path");
-        var ytdlpPath = appSettings.Value.YtdlPath ?? throw new Exception("Empty youtube-dl path");
+        var ffmpegPath = appSettings.Value.FfMpeg ?? throw new Exception("Empty ffmpeg path");
+        var ytdlpPath = appSettings.Value.YtDlp ?? throw new Exception("Empty youtube-dl path");
         FormatSort = appSettings.Value.FormatSort ?? throw new Exception("Empty format sort\nExample: \"res:720,ext:mp4\"");
 
         YoutubeDl = new YoutubeDL
