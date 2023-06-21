@@ -20,7 +20,7 @@ public class MediaService
         Action<OptionSet> configureOptions, CancellationToken token)
     {
         var fetch = await _global.YoutubeDl.RunVideoDataFetch(model.Url.ToString(), token);
-        if (fetch.Data is null || fetch.Data.Duration is null or 0 || fetch.Data.IsLive is true)
+        if (fetch.Data is null)
             throw new CustomInvalidOperationException("Invalid URL");
 
         OptionSet optionSet = new()
