@@ -3,9 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace DougaAPI.Models;
 
-public sealed class SpeedModel : ModelBase
-{
-    [JsonPropertyName("speed")]
-    [Required]
-    public double Speed { get; init; }
-}
+public sealed record SpeedModel(
+    [property: JsonPropertyName("speed")] [property: Required] double Speed,
+    Uri Uri,
+    int MaxFileSize
+) : ModelBase(Uri, MaxFileSize);

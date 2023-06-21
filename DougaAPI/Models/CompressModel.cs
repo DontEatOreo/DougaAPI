@@ -3,19 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace DougaAPI.Models;
 
-public sealed class CompressModel : ModelBase
-{
-    [JsonPropertyName("ios_compatible")]
-    [Required]
-    public bool IosCompatible { get; init; }
-
-    [JsonPropertyName("resolution")]
-    public string? Resolution { get; set; }
-
-    [JsonPropertyName("crf")]
-    [Required]
-    public int Crf { get; init; }
-
-    [JsonPropertyName("bitrate")]
-    public int? Bitrate { get; init; }
-}
+public sealed record CompressModel(
+    [property: JsonPropertyName("ios_compatible")] [property: Required] bool IosCompatible,
+    [property: JsonPropertyName("resolution")] string? Resolution,
+    [property: JsonPropertyName("crf")] [property: Required] int Crf,
+    [property: JsonPropertyName("bitrate")] int? Bitrate,
+    Uri Uri,
+    int MaxFileSize
+) : ModelBase(Uri, MaxFileSize);
