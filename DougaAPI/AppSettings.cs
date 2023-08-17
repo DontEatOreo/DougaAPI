@@ -4,9 +4,9 @@ namespace DougaAPI;
 
 public sealed class AppSettings
 {
-    [Required] public string YtdlpPath { get; init; } = null!;
-    [Required] public string FfmpegPath { get; init; } = null!;
-    [Required] public TimeSpan MaxDuration { get; init; }
-    [Required] public TimeSpan MaxTrimTime { get; init; }
-    [Required] public TimeSpan MaxCompressTime { get; init; }
+    [Required] public required string YtdlpPath { get; init; } = null!;
+    [Required] public required string FfmpegPath { get; init; } = null!;
+    [Required] public required TimeSpan MaxDuration { get; init; }
+    [Required] public required TimeSpan MaxTrimTime { get; init; }
+    [Required] public required TimeSpan MaxCompressTime { get; init; }
 }
