@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DougaAPI", "DougaAPI\DougaAPI.csproj", "{3293FD24-2253-4BF9-A3AB-317C17414717}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DougaAPI.Interfaces", "DougaAPI.Interfaces\DougaAPI.Interfaces.csproj", "{5F049384-D004-4376-9DFF-27EA9C202497}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DougaAPI.Exceptions", "DougaAPI.Exceptions\DougaAPI.Exceptions.csproj", "{EE78412A-5895-4B67-901F-B640559B65FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3293FD24-2253-4BF9-A3AB-317C17414717}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3293FD24-2253-4BF9-A3AB-317C17414717}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3293FD24-2253-4BF9-A3AB-317C17414717}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3293FD24-2253-4BF9-A3AB-317C17414717}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F049384-D004-4376-9DFF-27EA9C202497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F049384-D004-4376-9DFF-27EA9C202497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F049384-D004-4376-9DFF-27EA9C202497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F049384-D004-4376-9DFF-27EA9C202497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE78412A-5895-4B67-901F-B640559B65FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE78412A-5895-4B67-901F-B640559B65FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE78412A-5895-4B67-901F-B640559B65FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE78412A-5895-4B67-901F-B640559B65FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

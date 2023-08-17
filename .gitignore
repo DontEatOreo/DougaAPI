@@ -1,0 +1,45 @@
+**/bin/
+**/obj/
+*.user
+*.userosscache
+*.suo
+*.lock.json
+*.nupkg
+*.log
+*.bak
+.DS_Store
+*.swp
+**/.idea/
+**/.vs/
+**/.vscode/
+**/packages/
+flake.lock
+
+# auto generated files
+*.dll
+*.exe
+*.pdb 
+*.Development.json
+*.rsp
+*.cache
+*.config
+*.csproj.user
+
+.history/
+*.vsix
+
+# Test Results and Logs from build processes
+**/TestResults/
+**/[Bb]in/
+**/[Oo]bj/
+**/[Ll]og/
+**/[Ll]ogs/
+**/[Tt]emp/
+**/[Tt]mp/
+
+# User-Specific files and other generated files
+*.userprefs
+*.sln.docstates
+
+# Package Files #
+*.snk
